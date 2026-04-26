@@ -31,8 +31,8 @@
         <p class="subtitle">Cero inesperado, mucho esperado 👀</p>
 
         <div class="disclaimer">
-          <span class="disclaimer-emoji">👀</span>
-          <p><strong>Disclaimer cósmico:</strong> esto técnicamente <em>no son citas</em>… a menos que tú quieras que lo sean. Son salidas de amigos que no son citas, ¿ok? Ok.</p>
+          <span class="disclaimer-emoji">🌙</span>
+          <p><strong>Plan simple:</strong> elegir qué cositas te gustarían hacer. Sin presión, sin agenda, sin nada raro. Vibes only.</p>
         </div>
 
         <div class="instructions">
@@ -70,21 +70,37 @@
 
     <!-- SUMMARY -->
     <section id="summary" class="screen">
-      <div class="summary-card">
-        <h2>Resumen mágico ✨</h2>
-        <p class="summary-intro">Esto es lo que elegiste:</p>
-        <div id="summaryContent"></div>
-        <div class="summary-actions">
-          <button type="button" id="sendGithub" class="btn primary">📨 Enviar (crear issue en GitHub)</button>
-          <button type="button" id="copyBtn" class="btn secondary">📋 Copiar texto</button>
-          <button type="button" id="backBtn" class="btn ghost">← Volver a editar</button>
+      <!-- Capturable card -->
+      <div class="summary-card" id="shareableCard">
+        <div class="card-header">
+          <span class="card-stars">⭐ ✨ 💎</span>
+          <h2>Tus elecciones cósmicas</h2>
+          <p class="card-date" id="cardDate"></p>
         </div>
-        <p class="ps">PD: sigue sin ser una cita… <em>salvo que tú quieras</em> 💕</p>
-        <details class="help-details">
-          <summary>¿Y si no tengo cuenta de GitHub?</summary>
-          <p>Sin problema. Tócale a "Copiar texto" y mándame el resumen por WhatsApp/Telegram. Funciona igual ✨</p>
-        </details>
+        <div id="summaryContent"></div>
+        <div class="card-footer">
+          <p class="ps">PD: lo sé, lo sé… me sobreestimulé y se me fue la cabeza con todo esto 😅</p>
+          <p class="card-brand">— Cronograma inesperado ✨</p>
+        </div>
       </div>
+
+      <!-- Action buttons (NOT captured in image) -->
+      <div class="summary-actions">
+        <button type="button" id="shareBtn" class="btn primary">📤 Compartir</button>
+        <button type="button" id="downloadBtn" class="btn secondary">📸 Guardar imagen</button>
+        <button type="button" id="copyBtn" class="btn ghost-light">📋 Copiar texto</button>
+        <button type="button" id="backBtn" class="btn ghost">← Volver a editar</button>
+      </div>
+
+      <details class="help-details">
+        <summary>¿Cómo le mando esto?</summary>
+        <p>Tienes 3 opciones, escoge la que prefieras:</p>
+        <ul>
+          <li><strong>📤 Compartir</strong> abre WhatsApp / Snapchat / Discord / Instagram directamente desde el teléfono.</li>
+          <li><strong>📸 Guardar imagen</strong> descarga el resumen como foto para que la mandes manualmente.</li>
+          <li><strong>📷 Captura de pantalla</strong> también vale, esta tarjeta ya está bonita 😉</li>
+        </ul>
+      </details>
     </section>
   </main>
 
@@ -94,6 +110,7 @@
   <!-- Konami-ish easter egg target (BMO emerges) -->
   <button type="button" id="bmoEgg" class="bmo-egg" title="Toca a BMO" aria-label="BMO">🤖</button>
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

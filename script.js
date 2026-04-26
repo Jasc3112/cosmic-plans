@@ -1,9 +1,11 @@
 // =====================================================
-// CONFIG — edita tras crear el repo
+// CONFIG
 // =====================================================
 const CONFIG = {
-  githubUser: 'Jasc3112',
-  githubRepo: 'cosmic-plans',
+  // No requiere GitHub — la respuesta se entrega como imagen
+  imageFileName: 'cronograma-inesperado.png',
+  shareTitle: 'Cronograma inesperado ✨',
+  shareText: 'Mis elecciones cósmicas 💕',
 };
 
 // =====================================================
@@ -27,11 +29,9 @@ const PLANS = [
 
 // Random BMO + characters quotes (mostrarlas como tips)
 const BMO_QUOTES = [
-  '¿Sabías que algorítmicamente esto sigue sin ser una cita? 👀',
   'Garnet diría: "veo futuras risas"',
   'Finn dice: ¡matemático! Sigue eligiendo.',
   'Pearl: "es importante ser organizada con los planes"',
-  'Esto sigue sin ser una cita… ¿o sí? 💕',
   'BMO te observa con cariño',
   'Amethyst dice: "elige el más divertido"',
   'Princesa Bubblegum aprobaría tu selección',
@@ -40,11 +40,13 @@ const BMO_QUOTES = [
   'Si dudas, elige el que te haga sonreír',
   'Lapis dice: "está bien tomarse el tiempo"',
   'Marceline aprueba el plan más random',
+  'Connie dice: "elige con calma, no hay prisa"',
+  'BMO confirma: estás haciéndolo bien ✨',
 ];
 
 // Easter eggs por tarjeta — aparecen con probabilidad al elegirlas
 const CARD_EGGS = {
-  'cafe-largo':       'El café es solo café. Esto no es una cita 🕊️ (¿o sí?)',
+  'cafe-largo':       'Café tranquilo, vibes pasteles ☕✨',
   'avila-tour':       'Recordatorio cósmico: tú prometiste fresas con crema 🍓',
   'bowling':          'Lleva la billetera. Por las dudas. 🪙',
   'cocinar':          'Si el arroz queda quemado, fingimos que era plan B 🍚',
@@ -210,6 +212,14 @@ function buildSummary() {
   const maybe      = PLANS.filter(p => state[p.id] === 'maybe');
   const container  = document.getElementById('summaryContent');
 
+  // Set the date in the capturable card
+  const dateEl = document.getElementById('cardDate');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString('es-VE', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
   let html = '';
   if (interested.length) {
     html += `<div class="summary-section interested">
@@ -257,17 +267,97 @@ function buildMarkdown() {
   return md;
 }
 
-function openGithubIssue() {
-  const date = new Date().toLocaleDateString('es-VE');
-  const interested = Object.values(state).filter(v => v === 'interested').length;
-  const maybe = Object.values(state).filter(v => v === 'maybe').length;
-  const title = `Cronograma inesperado (${date}) — ${interested}⭐ ${maybe}🤔`;
-  const body = buildMarkdown();
-  const url = `https://github.com/${CONFIG.githubUser}/${CONFIG.githubRepo}/issues/new`
-            + `?title=${encodeURIComponent(title)}`
-            + `&body=${encodeURIComponent(body)}`
-            + `&labels=respuestas`;
-  window.open(url, '_blank', 'noopener');
+// =====================================================
+// IMAGE GENERATION + SHARE
+// =====================================================
+async function generateImageBlob() {
+  const card = document.getElementById('shareableCard');
+  if (!card || typeof html2canvas !== 'function') return null;
+
+  // Wait for fonts to be ready so the captured image looks right
+  if (document.fonts && document.fonts.ready) {
+    try { await document.fonts.ready; } catch {}
+  }
+
+  const canvas = await html2canvas(card, {
+    backgroundColor: null,
+    scale: window.devicePixelRatio > 1 ? 2 : 2,
+    useCORS: true,
+    logging: false,
+  });
+  return await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 0.95));
+}
+
+async function downloadImage() {
+  flashButton('downloadBtn', '⏳ Generando…');
+  const blob = await generateImageBlob();
+  if (!blob) {
+    alert('No se pudo generar la imagen. Toma una captura de pantalla manual 📸');
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = CONFIG.imageFileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  flashButton('downloadBtn', '✓ Descargada');
+}
+
+async function shareImageOrText() {
+  flashButton('shareBtn', '⏳ Preparando…');
+
+  // Try to share as image (works on most mobile browsers)
+  const blob = await generateImageBlob();
+
+  if (blob && navigator.canShare) {
+    try {
+      const file = new File([blob], CONFIG.imageFileName, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: CONFIG.shareTitle,
+          text: CONFIG.shareText,
+        });
+        flashButton('shareBtn', '✓ Compartido');
+        return;
+      }
+    } catch (e) {
+      // User cancelled or share failed — fall through to text share
+      if (e && e.name === 'AbortError') {
+        flashButton('shareBtn', '📤 Compartir');
+        return;
+      }
+    }
+  }
+
+  // Fallback: share text only via Web Share API
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: CONFIG.shareTitle,
+        text: buildMarkdown(),
+      });
+      flashButton('shareBtn', '✓ Compartido');
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') {
+        flashButton('shareBtn', '📤 Compartir');
+        return;
+      }
+    }
+  }
+
+  // Last fallback: download image so user can share manually
+  if (blob) {
+    await downloadImage();
+    showBmoTip('Imagen descargada — mándala por WhatsApp 💌');
+  } else {
+    await copyResults();
+    showBmoTip('Texto copiado — pégalo donde quieras enviarlo 💌');
+  }
 }
 
 async function copyResults() {
@@ -290,12 +380,19 @@ async function copyResults() {
   else alert('No se pudo copiar automáticamente. Selecciona el texto manualmente:\n\n' + md);
 }
 
+const _btnOriginals = new WeakMap();
 function flashButton(id, text) {
   const btn = document.getElementById(id);
-  const orig = btn.textContent;
+  if (!btn) return;
+  if (!_btnOriginals.has(btn)) _btnOriginals.set(btn, btn.textContent);
+  if (btn._flashTimer) clearTimeout(btn._flashTimer);
   btn.textContent = text;
   btn.disabled = true;
-  setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 1800);
+  btn._flashTimer = setTimeout(() => {
+    btn.textContent = _btnOriginals.get(btn);
+    btn.disabled = false;
+    btn._flashTimer = null;
+  }, 1800);
 }
 
 function resetAll() {
@@ -320,7 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
     showScreen('summary');
   });
   document.getElementById('resetBtn').addEventListener('click', resetAll);
-  document.getElementById('sendGithub').addEventListener('click', openGithubIssue);
+  document.getElementById('shareBtn').addEventListener('click', shareImageOrText);
+  document.getElementById('downloadBtn').addEventListener('click', downloadImage);
   document.getElementById('copyBtn').addEventListener('click', copyResults);
   document.getElementById('backBtn').addEventListener('click', () => showScreen('cards'));
 
