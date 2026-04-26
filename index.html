@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cronograma inesperado ✨ — cero inesperado, mucho esperado</title>
+  <meta name="description" content="Cronograma inesperado: cero inesperado, mucho esperado. Tarjetas para elegir planes, sin presión." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="cosmic-bg" aria-hidden="true">
+    <span class="float star1">⭐</span>
+    <span class="float star2">✨</span>
+    <span class="float gem1">💎</span>
+    <span class="float star3">🌟</span>
+    <span class="float gem2">🔮</span>
+    <span class="float bubble1">🍬</span>
+    <span class="float star4">⭐</span>
+    <span class="float gem3">💠</span>
+  </div>
+
+  <main class="container">
+    <!-- INTRO -->
+    <section id="intro" class="screen active">
+      <div class="intro-card">
+        <div class="bmo-bubble">BMO dice: "¡Hora de planear algo… matemático!"</div>
+        <h1>Cronograma inesperado ✨</h1>
+        <p class="subtitle">Cero inesperado, mucho esperado 👀</p>
+
+        <div class="disclaimer">
+          <span class="disclaimer-emoji">👀</span>
+          <p><strong>Disclaimer cósmico:</strong> esto técnicamente <em>no son citas</em>… a menos que tú quieras que lo sean. Son salidas de amigos que no son citas, ¿ok? Ok.</p>
+        </div>
+
+        <div class="instructions">
+          <h3>Cómo funciona</h3>
+          <ul>
+            <li><span class="badge interested">⭐ 1 click</span><span>Me interesa, vamos</span></li>
+            <li><span class="badge maybe">🤔 2 clicks</span><span>Tal vez, lo pienso</span></li>
+            <li><span class="badge none">○ Sin click</span><span>Paso, gracias</span></li>
+          </ul>
+          <p class="tip">Click otra vez sobre una tarjeta para deseleccionar 🪐</p>
+        </div>
+
+        <button type="button" id="startBtn" class="btn primary">Empezar la aventura ✨</button>
+        <p class="signature">PD: Garnet ya lo vio venir</p>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section id="cards" class="screen">
+      <header class="cards-header">
+        <h2>Elige tus planes favoritos</h2>
+        <p class="hint"><strong>1 click</strong> = me interesa &nbsp;·&nbsp; <strong>2 clicks</strong> = tal vez</p>
+        <div class="counter">
+          <span id="interestedCount">0</span>&nbsp;⭐ &nbsp;·&nbsp; <span id="maybeCount">0</span>&nbsp;🤔
+        </div>
+      </header>
+
+      <div id="cardsGrid" class="cards-grid"></div>
+
+      <div class="cards-actions">
+        <button type="button" id="submitBtn" class="btn primary" disabled>Listo, enviar mis elecciones 💌</button>
+        <button type="button" id="resetBtn" class="btn ghost">Reiniciar</button>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="summary" class="screen">
+      <div class="summary-card">
+        <h2>Resumen mágico ✨</h2>
+        <p class="summary-intro">Esto es lo que elegiste:</p>
+        <div id="summaryContent"></div>
+        <div class="summary-actions">
+          <button type="button" id="sendGithub" class="btn primary">📨 Enviar (crear issue en GitHub)</button>
+          <button type="button" id="copyBtn" class="btn secondary">📋 Copiar texto</button>
+          <button type="button" id="backBtn" class="btn ghost">← Volver a editar</button>
+        </div>
+        <p class="ps">PD: sigue sin ser una cita… <em>salvo que tú quieras</em> 💕</p>
+        <details class="help-details">
+          <summary>¿Y si no tengo cuenta de GitHub?</summary>
+          <p>Sin problema. Tócale a "Copiar texto" y mándame el resumen por WhatsApp/Telegram. Funciona igual ✨</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- BMO floating tip -->
+  <div id="bmoTip" class="bmo-tip" role="status" aria-live="polite"></div>
+
+  <!-- Konami-ish easter egg target (BMO emerges) -->
+  <button type="button" id="bmoEgg" class="bmo-egg" title="Toca a BMO" aria-label="BMO">🤖</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
