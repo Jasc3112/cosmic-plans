@@ -42,6 +42,7 @@ const BMO_QUOTES = [
   'Marceline aprueba el plan más random',
   'Connie dice: "elige con calma, no hay prisa"',
   'BMO confirma: estás haciéndolo bien ✨',
+  'Está bueno el álbum de "La Ciudad" de Alleh y Yorghaki 🎶',
 ];
 
 // Easter eggs por tarjeta — aparecen con probabilidad al elegirlas
